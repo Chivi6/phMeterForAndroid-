@@ -2,35 +2,32 @@
 #include<intrins.h>
 #define uchar unsigned char
 #define uint unsigned int
-#define Auto 2;
-#define Single 3;
-#define no 0;
-#define yes 1;
-#define pause 1;
-#define start 2;
-#define setInterval 3;
-#define changeMod 4;
-#define reSet 5;
+#define Auto '2'
+#define Single '3'
+#define no '0'
+#define yes '1'
+#define pause '1'
+#define start '2'
+#define setInterval '3'
+#define changeMod '4'
+#define reSet '5'
 
 
 /*指令格式：str[0]:singleMeasuring;
-							 [1]:newCom?;
-							 [2]:isWorked;
-							 [3]:workMod;
-							 [4~10]:interval;范围3s~166min*/
+							 [1]:isWorked;
+							 [2]:workMod;*/
 	
-sbit CLK=P1^3;
-sbit ST=P1^2;
-sbit EOC=P1^1;
-sbit OE=P1^0;
+sbit CLK=P1^0;
+sbit OE=P1^1;
+sbit EOC=P1^3;
+sbit ST=P1^4;
+sbit Eadc = P3^7;
 
-uchar str[50] = "";
+uchar str[3] = "";
 uchar isReceived = no;
 uchar isWorked = no;
 uchar workMod = Single;
-unsigned long interval = 3000;
 uchar j = 0;
-uchar newCom = no;
 uchar singleMeas = no;
 uchar result = 0;
 
@@ -52,36 +49,6 @@ void init()
 		 ET0=1;
 }  
 
-void setWorkStatu(){
-	isWorked = str[2];
-}
-
-void setWorkMod(){
-	workMod = str[3];
-}
-
-
-
-uint charToNum(uchar uc){
-	switch uc{
-		case 0:return 0;
-		case 1:return 1;
-		case 2:return 2;
-		case 3:return 3;
-		case 4:return 4;
-		case 5:return 5;
-		case 6:return 6;
-		case 7:return 7;
-		case 8:return 8;
-		case 9:return 9;
-	}
-}
-
-void setInterval(){
-	interval = charToNum(str[4])*1000000+charToNum(str[5])*100000+
-							charToNum(str[6])*10000+charToNum(str[7])*1000+
-							charToNum(str[8])*100+charToNum(str[9])*10+charToNum(str[10]);
-}
 
 
 void delay(unsigned long z)
@@ -91,46 +58,55 @@ void delay(unsigned long z)
                 for(y=110;y>0;y--);       
 }
 
+void blueToothSend(uchar u){
+	if(isReceived == no){	
+		SBUF = u;
+		while(!TI);
+		TI = 0;
+	}
+}
+
 void main(){
-	
+	init();
 	while(1){
 		
-		if(newCom){
-			switch newCom{
-				case pause:
-					isWorked = no;
-				break;
-				case start:
-					isWorked = yes;
-				break;
-				case setInterval:
-					setInterval();
-				break;
-				case changeMod:
-					setWorkMod();
-				break;
-				case reSet:
-					setWorkStatu();
-				setWorkMod();
-				setInterval();
-				break;
-			}
-		}
-		if(isWorked){
-			switch(workMod){
-				case Auto:
-					delay(interval);
+		
+		if(isWorked == yes){
+			
+			if(workMod == Auto){
+					Eadc = 1;
+					delay(3000);
 					ST=0;
-          ST=1;
+          ST=1;blueToothSend(P1);
           ST=0;//start一个高脉冲启动AD0809;
-          while(!EOC);
+          while(0==EOC);
           OE=1;
           result = P2; //P2连接adc0809输出
           OE=0;
-					break;
-				case Single:
-					break;
+					blueToothSend(result);
+					
+					P2 = 0xff;
+					Eadc = 0;
 			}
+			if(workMod == Single){
+					if(singleMeas == yes){
+						Eadc = 1;
+						delay(20);
+						ST=0;
+						ST=1;blueToothSend(str[0]);
+						ST=0;//start一个高脉冲启动AD0809;
+						while(!EOC);
+						OE=1;
+						result = P2; //P2连接adc0809输出
+						OE=0;
+						blueToothSend(result);
+						
+						singleMeas = no;
+						P2 = 0xff;
+						Eadc = 0;
+					}
+			}	
+			
 		}
 	
 	}
@@ -144,18 +120,16 @@ void ser() interrupt 4
          if(RI)       //接收数据，手动将RI清0  
      {         
          RI=0;             
-         if(isReceived)
-         {                          
-             for(j=0;str[j]!='#'&&j<50;j++){  
-                   str[j]='\0'; 
-						 } 
-             j=0;  
-						 isReceived = yes;
+         if(isReceived == no)
+         {   
+					 isReceived = yes;                       
+           j=0;  						 
          }  
          str[j]=SBUF;            
-         if(str[j]=='#'||j==49){     //以'#'作为传送字符串的结尾符，我定义的字符数组最长为50所以49也应该结束。  
+         if(j==2){     
            singleMeas = str[0];
-					 newCom = str[1];  
+					 isWorked = str[1]; 
+					 workMod = str[2];
 					 isReceived = no;
 				 }else{  
              j++; 

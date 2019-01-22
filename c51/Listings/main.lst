@@ -1,0 +1,176 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              01/22/2019 21:06:50 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\KEIL C51\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\mai
+                    -n.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include<reg51.h>
+   2          #include<intrins.h>
+   3          #define uchar unsigned char
+   4          #define uint unsigned int
+   5          #define Auto '2'
+   6          #define Single '3'
+   7          #define no '0'
+   8          #define yes '1'
+   9          #define pause '1'
+  10          #define start '2'
+  11          #define setInterval '3'
+  12          #define changeMod '4'
+  13          #define reSet '5'
+  14          
+  15          
+  16          /*指令格式：str[0]:singleMeasuring;
+  17                         [1]:isWorked;
+  18                         [2]:workMod;*/
+  19            
+  20          sbit CLK=P1^0;
+  21          sbit OE=P1^1;
+  22          sbit EOC=P1^3;
+  23          sbit ST=P1^4;
+  24          sbit Eadc = P3^7;
+  25          
+  26          uchar str[3] = "";
+  27          uchar isReceived = no;
+  28          uchar isWorked = no;
+  29          uchar workMod = Single;
+  30          uchar j = 0;
+  31          uchar singleMeas = no;
+  32          uchar result = 0;
+  33          
+  34          void init()  
+  35          {  
+  36   1           TMOD=0x22;    //定时器1用于蓝牙波特率，定时器2用于adc0809时钟          
+  37   1           TH0=0x14;
+  38   1           TL0=0x00;     //8自动重装定时器
+  39   1           TR0=1;
+  40   1           TH1=0xfd;     //定时器1初值  ,设置波特率为9600 晶振11.0529MHZ?  
+  41   1           TL1=0xfd;  
+  42   1           TR1=1;        //开启定时器1  
+  43   1         
+  44   1           SM0=0;  
+  45   1           SM1=1;        //10位异步接收，（8位数据）波特率可变  
+  46   1           REN=1;        //允许串行口接收位  
+  47   1           EA=1;         //允许中断（总闸）  
+  48   1           ES=1;         //允许串口中断  
+  49   1           ET0=1;
+  50   1      }  
+  51          
+  52          
+  53          
+  54          void delay(unsigned long z)
+C51 COMPILER V9.59.0.0   MAIN                                                              01/22/2019 21:06:50 PAGE 2   
+
+  55          {
+  56   1              uint x,y;
+  57   1              for(x=z;x>0;x--)
+  58   1                      for(y=110;y>0;y--);       
+  59   1      }
+  60          
+  61          void blueToothSend(uchar u){
+  62   1        if(isReceived == no){ 
+  63   2          SBUF = u;
+  64   2          while(!TI);
+  65   2          TI = 0;
+  66   2        }
+  67   1      }
+  68          
+  69          void main(){
+  70   1        init();
+  71   1        while(1){
+  72   2          
+  73   2          
+  74   2          if(isWorked == yes){
+  75   3            
+  76   3            if(workMod == Auto){
+  77   4                Eadc = 1;
+  78   4                delay(3000);
+  79   4                ST=0;
+  80   4                ST=1;blueToothSend(P1);
+  81   4                ST=0;//start一个高脉冲启动AD0809;
+  82   4                while(0==EOC);
+  83   4                OE=1;
+  84   4                result = P2; //P2连接adc0809输出
+  85   4                OE=0;
+  86   4                blueToothSend(result);
+  87   4                
+  88   4                P2 = 0xff;
+  89   4                Eadc = 0;
+  90   4            }
+  91   3            if(workMod == Single){
+  92   4                if(singleMeas == yes){
+  93   5                  Eadc = 1;
+  94   5                  delay(20);
+  95   5                  ST=0;
+  96   5                  ST=1;blueToothSend(str[0]);
+  97   5                  ST=0;//start一个高脉冲启动AD0809;
+  98   5                  while(!EOC);
+  99   5                  OE=1;
+ 100   5                  result = P2; //P2连接adc0809输出
+ 101   5                  OE=0;
+ 102   5                  blueToothSend(result);
+ 103   5                  
+ 104   5                  singleMeas = no;
+ 105   5                  P2 = 0xff;
+ 106   5                  Eadc = 0;
+ 107   5                }
+ 108   4            } 
+ 109   3            
+ 110   3          }
+ 111   2        
+ 112   2        }
+ 113   1      
+ 114   1      
+ 115   1      
+ 116   1      }
+C51 COMPILER V9.59.0.0   MAIN                                                              01/22/2019 21:06:50 PAGE 3   
+
+ 117          
+ 118          void ser() interrupt 4  
+ 119          {  
+ 120   1               if(RI)       //接收数据，手动将RI清0  
+ 121   1           {         
+ 122   2               RI=0;             
+ 123   2               if(isReceived == no)
+ 124   2               {   
+ 125   3                 isReceived = yes;                       
+ 126   3                 j=0;              
+ 127   3               }  
+ 128   2               str[j]=SBUF;            
+ 129   2               if(j==2){     
+ 130   3                 singleMeas = str[0];
+ 131   3                 isWorked = str[1]; 
+ 132   3                 workMod = str[2];
+ 133   3                 isReceived = no;
+ 134   3               }else{  
+ 135   3                   j++; 
+ 136   3               } 
+ 137   2           }  
+ 138   1         
+ 139   1           if(TI)     //发送数据  
+ 140   1           {  
+ 141   2           }      
+ 142   1      }  
+ 143          
+ 144          void timer0() interrupt 1
+ 145          {
+ 146   1              CLK=~CLK;
+ 147   1      }
+ 148           
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    253    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
