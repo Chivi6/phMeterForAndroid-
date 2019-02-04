@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   MAIN                                                              01/22/2019 21:06:50 PAGE 1   
+C51 COMPILER V9.59.0.0   MAIN                                                              01/23/2019 21:48:06 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   52          
   53          
   54          void delay(unsigned long z)
-C51 COMPILER V9.59.0.0   MAIN                                                              01/22/2019 21:06:50 PAGE 2   
+C51 COMPILER V9.59.0.0   MAIN                                                              01/23/2019 21:48:06 PAGE 2   
 
   55          {
   56   1              uint x,y;
@@ -89,7 +89,7 @@ line level    source
   77   4                Eadc = 1;
   78   4                delay(3000);
   79   4                ST=0;
-  80   4                ST=1;blueToothSend(P1);
+  80   4                ST=1;
   81   4                ST=0;//start一个高脉冲启动AD0809;
   82   4                while(0==EOC);
   83   4                OE=1;
@@ -105,7 +105,7 @@ line level    source
   93   5                  Eadc = 1;
   94   5                  delay(20);
   95   5                  ST=0;
-  96   5                  ST=1;blueToothSend(str[0]);
+  96   5                  ST=1;
   97   5                  ST=0;//start一个高脉冲启动AD0809;
   98   5                  while(!EOC);
   99   5                  OE=1;
@@ -126,7 +126,7 @@ line level    source
  114   1      
  115   1      
  116   1      }
-C51 COMPILER V9.59.0.0   MAIN                                                              01/22/2019 21:06:50 PAGE 3   
+C51 COMPILER V9.59.0.0   MAIN                                                              01/23/2019 21:48:06 PAGE 3   
 
  117          
  118          void ser() interrupt 4  
@@ -163,7 +163,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    253    ----
+   CODE SIZE        =    243    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

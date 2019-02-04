@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    01/22/2019  21:06:50  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    01/23/2019  21:48:06  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
@@ -35,12 +35,12 @@ LINK MAP OF MODULE:  .\Objects\PHC51 (?C_STARTUP)
                     000EH     0015H                  *** GAP ***
             CODE    0023H     0003H     ABSOLUTE     
             CODE    0026H     008CH     UNIT         ?C_C51STARTUP
-            CODE    00B2H     0061H     UNIT         ?PR?MAIN?MAIN
-            CODE    0113H     003DH     UNIT         ?PR?SER?MAIN
-            CODE    0150H     0026H     UNIT         ?PR?_DELAY?MAIN
-            CODE    0176H     0020H     UNIT         ?PR?INIT?MAIN
-            CODE    0196H     0018H     UNIT         ?C_INITSEG
-            CODE    01AEH     0016H     UNIT         ?PR?_BLUETOOTHSEND?MAIN
+            CODE    00B2H     0057H     UNIT         ?PR?MAIN?MAIN
+            CODE    0109H     003DH     UNIT         ?PR?SER?MAIN
+            CODE    0146H     0026H     UNIT         ?PR?_DELAY?MAIN
+            CODE    016CH     0020H     UNIT         ?PR?INIT?MAIN
+            CODE    018CH     0018H     UNIT         ?C_INITSEG
+            CODE    01A4H     0016H     UNIT         ?PR?_BLUETOOTHSEND?MAIN
 
 
 
@@ -59,7 +59,7 @@ SEGMENT                           DATA_GROUP
   +--> ?PR?_DELAY?MAIN
   +--> ?PR?_BLUETOOTHSEND?MAIN
 
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  01/22/2019  21:06:50  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  01/23/2019  21:48:06  PAGE 2
 
 
 ?PR?_DELAY?MAIN                 0011H    0004H
@@ -113,23 +113,23 @@ SYMBOL TABLE OF MODULE:  .\Objects\PHC51 (?C_STARTUP)
   B:00A8H.7       PUBLIC        EA
   D:0008H         PUBLIC        isReceived
   D:0009H         PUBLIC        singleMeas
-  C:0150H         PUBLIC        _delay
+  C:0146H         PUBLIC        _delay
   B:0090H.1       PUBLIC        OE
   B:00A8H.4       PUBLIC        ES
   B:0098H.0       PUBLIC        RI
   B:0098H.1       PUBLIC        TI
   D:000AH         PUBLIC        result
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  01/22/2019  21:06:50  PAGE 3
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  01/23/2019  21:48:06  PAGE 3
 
 
   C:00B2H         PUBLIC        main
   B:0090H.4       PUBLIC        ST
   D:0099H         PUBLIC        SBUF
   D:0089H         PUBLIC        TMOD
-  C:0176H         PUBLIC        init
-  C:01B7H         PUBLIC        _blueToothSend
+  C:016CH         PUBLIC        init
+  C:01ADH         PUBLIC        _blueToothSend
   B:00A8H.1       PUBLIC        ET0
-  C:0113H         PUBLIC        ser
+  C:0109H         PUBLIC        ser
   D:008CH         PUBLIC        TH0
   D:000BH         PUBLIC        isWorked
   D:008DH         PUBLIC        TH1
@@ -148,22 +148,22 @@ SYMBOL TABLE OF MODULE:  .\Objects\PHC51 (?C_STARTUP)
   D:0010H         PUBLIC        j
   B:00B0H.7       PUBLIC        Eadc
   -------         PROC          INIT
-  C:0176H         LINE#         34
-  C:0176H         LINE#         35
-  C:0176H         LINE#         36
-  C:0179H         LINE#         37
-  C:017CH         LINE#         38
-  C:017FH         LINE#         39
-  C:0181H         LINE#         40
-  C:0184H         LINE#         41
-  C:0187H         LINE#         42
-  C:0189H         LINE#         44
-  C:018BH         LINE#         45
-  C:018DH         LINE#         46
-  C:018FH         LINE#         47
-  C:0191H         LINE#         48
-  C:0193H         LINE#         49
-  C:0195H         LINE#         50
+  C:016CH         LINE#         34
+  C:016CH         LINE#         35
+  C:016CH         LINE#         36
+  C:016FH         LINE#         37
+  C:0172H         LINE#         38
+  C:0175H         LINE#         39
+  C:0177H         LINE#         40
+  C:017AH         LINE#         41
+  C:017DH         LINE#         42
+  C:017FH         LINE#         44
+  C:0181H         LINE#         45
+  C:0183H         LINE#         46
+  C:0185H         LINE#         47
+  C:0187H         LINE#         48
+  C:0189H         LINE#         49
+  C:018BH         LINE#         50
   -------         ENDPROC       INIT
   -------         PROC          _DELAY
   D:0011H         SYMBOL        z
@@ -171,26 +171,26 @@ SYMBOL TABLE OF MODULE:  .\Objects\PHC51 (?C_STARTUP)
   D:0006H         SYMBOL        x
   D:0004H         SYMBOL        y
   -------         ENDDO         
-  C:0150H         LINE#         54
-  C:0158H         LINE#         55
-  C:0158H         LINE#         57
-  C:0161H         LINE#         58
-  C:0175H         LINE#         59
+  C:0146H         LINE#         54
+  C:014EH         LINE#         55
+  C:014EH         LINE#         57
+  C:0157H         LINE#         58
+  C:016BH         LINE#         59
   -------         ENDPROC       _DELAY
   -------         PROC          L?0033
   -------         ENDPROC       L?0033
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  01/22/2019  21:06:50  PAGE 4
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  01/23/2019  21:48:06  PAGE 4
 
 
   -------         PROC          _BLUETOOTHSEND
   D:0007H         SYMBOL        u
-  C:01B7H         LINE#         61
-  C:01B7H         LINE#         62
-  C:01BCH         LINE#         63
-  C:01BEH         LINE#         64
-  C:01C1H         LINE#         65
-  C:01C3H         LINE#         66
-  C:01C3H         LINE#         67
+  C:01ADH         LINE#         61
+  C:01ADH         LINE#         62
+  C:01B2H         LINE#         63
+  C:01B4H         LINE#         64
+  C:01B7H         LINE#         65
+  C:01B9H         LINE#         66
+  C:01B9H         LINE#         67
   -------         ENDPROC       _BLUETOOTHSEND
   -------         PROC          MAIN
   C:00B2H         LINE#         69
@@ -202,62 +202,62 @@ SYMBOL TABLE OF MODULE:  .\Objects\PHC51 (?C_STARTUP)
   C:00C2H         LINE#         78
   C:00CBH         LINE#         79
   C:00CDH         LINE#         80
-  C:00D4H         LINE#         81
-  C:00D6H         LINE#         82
-  C:00D9H         LINE#         83
-  C:00D9H         LINE#         84
-  C:00D9H         LINE#         85
-  C:00D9H         LINE#         86
-  C:00DCH         LINE#         88
-  C:00DFH         LINE#         89
-  C:00E1H         LINE#         90
-  C:00E1H         LINE#         91
-  C:00E6H         LINE#         92
-  C:00EBH         LINE#         93
-  C:00EDH         LINE#         94
-  C:00F8H         LINE#         95
-  C:00FAH         LINE#         96
-  C:0101H         LINE#         97
-  C:0103H         LINE#         98
-  C:0106H         LINE#         99
-  C:0106H         LINE#         100
-  C:0106H         LINE#         101
-  C:0106H         LINE#         102
-  C:0109H         LINE#         104
-  C:010CH         LINE#         105
-  C:010FH         LINE#         106
-  C:0111H         LINE#         107
-  C:0111H         LINE#         108
-  C:0111H         LINE#         110
-  C:0111H         LINE#         112
+  C:00CFH         LINE#         81
+  C:00D1H         LINE#         82
+  C:00D4H         LINE#         83
+  C:00D4H         LINE#         84
+  C:00D4H         LINE#         85
+  C:00D4H         LINE#         86
+  C:00D7H         LINE#         88
+  C:00DAH         LINE#         89
+  C:00DCH         LINE#         90
+  C:00DCH         LINE#         91
+  C:00E1H         LINE#         92
+  C:00E6H         LINE#         93
+  C:00E8H         LINE#         94
+  C:00F3H         LINE#         95
+  C:00F5H         LINE#         96
+  C:00F7H         LINE#         97
+  C:00F9H         LINE#         98
+  C:00FCH         LINE#         99
+  C:00FCH         LINE#         100
+  C:00FCH         LINE#         101
+  C:00FCH         LINE#         102
+  C:00FFH         LINE#         104
+  C:0102H         LINE#         105
+  C:0105H         LINE#         106
+  C:0107H         LINE#         107
+  C:0107H         LINE#         108
+  C:0107H         LINE#         110
+  C:0107H         LINE#         112
   -------         ENDPROC       MAIN
   -------         PROC          SER
-  C:0113H         LINE#         118
-  C:011CH         LINE#         120
-  C:011FH         LINE#         121
-  C:011FH         LINE#         122
-  C:0121H         LINE#         123
-  C:0126H         LINE#         124
-  C:0126H         LINE#         125
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  01/22/2019  21:06:50  PAGE 5
+  C:0109H         LINE#         118
+  C:0112H         LINE#         120
+  C:0115H         LINE#         121
+  C:0115H         LINE#         122
+  C:0117H         LINE#         123
+  C:011CH         LINE#         124
+  C:011CH         LINE#         125
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  01/23/2019  21:48:06  PAGE 5
 
 
-  C:0129H         LINE#         126
-  C:012CH         LINE#         127
-  C:012CH         LINE#         128
-  C:0133H         LINE#         129
-  C:0139H         LINE#         130
-  C:013CH         LINE#         131
-  C:013FH         LINE#         132
-  C:0142H         LINE#         133
-  C:0145H         LINE#         134
-  C:0147H         LINE#         135
-  C:0149H         LINE#         136
-  C:0149H         LINE#         137
-  C:0149H         LINE#         139
-  C:0149H         LINE#         140
-  C:0149H         LINE#         141
-  C:0149H         LINE#         142
+  C:011FH         LINE#         126
+  C:0122H         LINE#         127
+  C:0122H         LINE#         128
+  C:0129H         LINE#         129
+  C:012FH         LINE#         130
+  C:0132H         LINE#         131
+  C:0135H         LINE#         132
+  C:0138H         LINE#         133
+  C:013BH         LINE#         134
+  C:013DH         LINE#         135
+  C:013FH         LINE#         136
+  C:013FH         LINE#         137
+  C:013FH         LINE#         139
+  C:013FH         LINE#         140
+  C:013FH         LINE#         141
+  C:013FH         LINE#         142
   -------         ENDPROC       SER
   -------         PROC          TIMER0
   C:0003H         LINE#         144
@@ -266,5 +266,5 @@ SYMBOL TABLE OF MODULE:  .\Objects\PHC51 (?C_STARTUP)
   -------         ENDPROC       TIMER0
   -------         ENDMOD        MAIN
 
-Program Size: data=22.0 xdata=0 code=426
+Program Size: data=22.0 xdata=0 code=416
 LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

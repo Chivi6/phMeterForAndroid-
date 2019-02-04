@@ -77,7 +77,7 @@ void main(){
 					Eadc = 1;
 					delay(3000);
 					ST=0;
-          ST=1;blueToothSend(P1);
+          ST=1;
           ST=0;//start一个高脉冲启动AD0809;
           while(0==EOC);
           OE=1;
@@ -93,7 +93,7 @@ void main(){
 						Eadc = 1;
 						delay(20);
 						ST=0;
-						ST=1;blueToothSend(str[0]);
+						ST=1;
 						ST=0;//start一个高脉冲启动AD0809;
 						while(!EOC);
 						OE=1;
