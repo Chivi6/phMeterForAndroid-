@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:id="@+id/main_activity"
     >
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -23,79 +25,38 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:id="@+id/home_page"
-        >
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            app:cardCornerRadius="5dp"
-            android:elevation="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp">
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/previous_num"
-                android:text="8.98"
-                android:textSize="100dp"/>
+        android:id="@+id/home_page">
+    <!--
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="最高：9.99"
-                android:id="@+id/max_num"
-                android:layout_below="@id/previous_num"
-                android:textSize="15dp"
-                />
+    -->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="最低：3.99"
-                android:layout_below="@id/previous_num"
-                android:layout_alignRight="@id/previous_num"
-                android:textSize="15dp"
-                />
-        </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            app:cardCornerRadius="5dp"
-            android:elevation="10dp"
-            android:layout_margin="20dp">
-
-        </android.support.v7.widget.CardView>
-
-        <LinearLayout
+        <android.support.design.widget.TabLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp">
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="读数/暂停"
-                android:layout_weight="1"
-                android:layout_marginRight="20dp"
-                />
+            android:id="@+id/home_tablayout"
+            app:tabTextColor="#aaa"
+            app:tabSelectedTextColor="#000"
+            app:tabBackground="@color/colorPrimary"
+            app:tabIndicatorColor="#fff"
+            app:tabMode="fixed"
+            app:tabIndicatorHeight="5dp"
+            app:tabGravity="fill"/>
 
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="保存并停止"
-                android:layout_weight="1"/>
-        </LinearLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/home_vp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v4.view.ViewPager>
 
     </LinearLayout>
-
 </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/nav_menu"
+        app:headerLayout="@layout/nav_header"
+        android:id="@+id/home_navig"/>
+</android.support.v4.widget.DrawerLayout>
