@@ -63,8 +63,9 @@ public class ConnectedDeviceList extends AppCompatActivity {
             viewHolder.deviceAddress.setText(addr);
             float a = PHMeterParam.getInstance().getaParam(addr,PHMeterParam.aParam );
             float b = PHMeterParam.getInstance().getaParam(addr,PHMeterParam.bParam );
-            DecimalFormat decimalFormat=new DecimalFormat(".00");
-            viewHolder.deviceParam.setText("A"+decimalFormat.format(a)+"  B"+decimalFormat.format(b));
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
+            viewHolder.deviceParam.setText("A: "+decimalFormat.format(a)
+            +"      B: "+decimalFormat.format(b));
         }
 
         @Override

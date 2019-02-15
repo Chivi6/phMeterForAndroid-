@@ -31,7 +31,7 @@ public class MeasuringData extends LitePalSupport {
         this.testName = testName;
         this.testContent = testContent;
         this.max = 0;
-        this.min = 0;
+        this.min = 15;
         this.isRecent = isRecent;
     }
 
@@ -39,11 +39,15 @@ public class MeasuringData extends LitePalSupport {
         return (ArrayList<MeasuringData>) LitePal.findAll(MeasuringData.class);
     }
 
-    public static MeasuringData getRecentMeas(){
-        List<MeasuringData> list = LitePal.where("isRecent=?","1").find(MeasuringData.class);
+    public static MeasuringData getRecentMeas(ArrayList<MeasuringData> list){
         if (list.size() == 0){
             return null;
         }else {
+            for (MeasuringData data:list){
+                if (data.isRecent){
+                    return data;
+                }
+            }
             return list.get(0);
         }
     }

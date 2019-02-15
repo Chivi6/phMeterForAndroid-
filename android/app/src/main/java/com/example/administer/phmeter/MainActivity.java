@@ -112,18 +112,18 @@ public class MainActivity extends AppCompatActivity {
             float v = (float) msg.what/255*5;
             float previousNum = PHMeterParam.getInstance().getMeterResult(connectingDevice, v);
 
-            if (isMeasuring){
+            if (isMeasuring && currentData != null){
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd. HH:mm:ss");// HH:mm:ss
                 //获取当前时间
                 Date date = new Date(System.currentTimeMillis());
                 currentData.addMData(previousNum,simpleDateFormat.format(date));
-                DecimalFormat decimalFormat=new DecimalFormat(".00");
+                DecimalFormat decimalFormat=new DecimalFormat("0.00");
                 preNum.setText(decimalFormat.format(previousNum));
                 if (previousNum > currentData.getMax()){
-                    maxNum.setText(decimalFormat.format(previousNum));
+                    maxNum.setText("最高："+decimalFormat.format(previousNum));
                     currentData.setMax(previousNum);
                 }else if (previousNum < currentData.getMin()){
-                    minNum.setText(decimalFormat.format(previousNum));
+                    minNum.setText("最低："+decimalFormat.format(previousNum));
                     currentData.setMin(previousNum);
                 }
             }else {
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText name = view.findViewById(R.id.new_test_name)
                 ,content = view.findViewById(R.id.new_test_content);
         if (item.getItemId() == R.id.new_test){
-            AlertDialog dialog = new AlertDialog.Builder(this)
+            final AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle("新建测试")
                     .setView(view)
                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -229,26 +229,34 @@ public class MainActivity extends AppCompatActivity {
                             dialog.cancel();
                         }
                     })
-                    .setPositiveButton("创建", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");// HH:mm:ss
-                            //获取当前时间
-                            Date date = new Date(System.currentTimeMillis());
-                            String cTime = simpleDateFormat.format(date);
-
-                            MeasuringData data = new MeasuringData(
-                                    MeasuringData.findAllData().size(),
-                                    cTime, name.getText().toString(),
-                                    content.getText().toString() ,true );
-                            data.save();
-                            measDatas.add(data);
-                            hdAdapter.notifyItemInserted(measDatas.size());
-                            StartTest(data);
-                        }
-                    }).create();
+                    .setPositiveButton("创建", null).create();
 
             dialog.show();
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (name.getText().toString().equals("")){
+                                ShowToast("请输入名字");
+                                return;
+                            }else {
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");// HH:mm:ss
+                                //获取当前时间
+                                Date date = new Date(System.currentTimeMillis());
+                                String cTime = simpleDateFormat.format(date);
+
+                                MeasuringData data = new MeasuringData(
+                                        MeasuringData.findAllData().size(),
+                                        cTime, name.getText().toString(),
+                                        content.getText().toString() ,true );
+                                data.save();
+                                measDatas.add(data);
+                                hdAdapter.notifyItemInserted(measDatas.size());
+                                StartTest(data);
+                                dialog.cancel();
+                            }
+                        }
+                    });
 
         }
         return true;
@@ -289,8 +297,8 @@ public class MainActivity extends AppCompatActivity {
         switchMod = views.get(0).findViewById(R.id.switch_mod);
         measEnable = views.get(0).findViewById(R.id.meas_enable);
 
-        currentData = MeasuringData.getRecentMeas();
         measDatas = MeasuringData.findAllData();
+        currentData = MeasuringData.getRecentMeas(measDatas);
 
         hdAdapter = new HistoryDataListAdapter(measDatas);
         HistoryData = views.get(1).findViewById(R.id.history_data);
@@ -325,12 +333,12 @@ public class MainActivity extends AppCompatActivity {
                     currentMod = modAuto;
                     isAutoEnable = true;
                     if (btSocket != null){
-                        new BTSend("012",btSocket);
+                        new BTSend("012",btSocket).start();
                     }
                 }else {
                     currentMod = modSingle;
                     if (btSocket != null){
-                        new BTSend("013",btSocket);
+                        new BTSend("013",btSocket).start();
                     }
                 }
             }
@@ -343,16 +351,18 @@ public class MainActivity extends AppCompatActivity {
                 if (currentMod == modAuto){
                     if (isAutoEnable){
                         if (btSocket != null){
-                            new BTSend("002",btSocket);
+                            new BTSend("002",btSocket).start();
+                            isAutoEnable = false;
                         }
                     }else if (!isAutoEnable){
                         if (btSocket != null){
-                            new BTSend("012",btSocket);
+                            new BTSend("012",btSocket).start();
+                            isAutoEnable = true;
                         }
                     }
                 }else if (currentMod == modSingle){
                     if (btSocket != null){
-                        new BTSend("112",btSocket);
+                        new BTSend("112",btSocket).start();
                     }
                 }
             }
@@ -408,12 +418,11 @@ public class MainActivity extends AppCompatActivity {
             homePage.setVisibility(View.VISIBLE);
             mainAct.removeView(rl);
             new BTReceive(btSocket,BTReceiver).start();
+            StartTest(null);
             if (!PHMeterParam.getInstance().isCalib(address)){
                 ShowToast("设备未校准，请进行校准");
                 Intent intent = new Intent(MainActivity.this,CalibDeviceActivity.class);
                 startActivity(intent);
-            }else {
-                StartTest(null);
             }
         }catch (IOException e){
             isBTConnect = false;
@@ -435,9 +444,12 @@ public class MainActivity extends AppCompatActivity {
             ShowToast("请新建测试");
             views.get(0).setVisibility(View.GONE);
         }else {
-            preNum.setText("");
-            minNum.setText("");
-            maxNum.setText("");
+            if (currentData == null){
+                views.get(0).setVisibility(View.VISIBLE);
+            }
+            preNum.setText("--");
+            minNum.setText("最高：--");
+            maxNum.setText("最低：--");
             if (currentData != null){
                 if (data != null){
                     currentData.setRecent(false);
@@ -449,7 +461,7 @@ public class MainActivity extends AppCompatActivity {
             currentData.setRecent(true);
             isMeasuring = true;
             switchMod.setChecked(false);
-            new BTSend("013", btSocket);
+            new BTSend("013", btSocket).start();
             currentTestName.setText(currentData.getTestName());
         }
 
@@ -629,12 +641,12 @@ public class MainActivity extends AppCompatActivity {
                 testName.setText(data.getTestName());
                 testContent.setText(data.getTestContent());
                 createTime.setText(data.getCreatTime());
-                LinearLayoutManager manager = new LinearLayoutManager(MainActivity.this);
-                HistoryDetailAdapter adapter = new HistoryDetailAdapter(datas.get(p).getMdatas());
-                HistDetData.setLayoutManager(manager);
-                HistDetData.setAdapter(adapter);
 
                 if (p == openedPosition){
+                    LinearLayoutManager manager = new LinearLayoutManager(MainActivity.this);
+                    HistoryDetailAdapter adapter = new HistoryDetailAdapter(datas.get(p).getMdatas());
+                    HistDetData.setLayoutManager(manager);
+                    HistDetData.setAdapter(adapter);
                     detailLl.setVisibility(View.VISIBLE);
                 }else {
                     detailLl.setVisibility(View.GONE);
@@ -690,7 +702,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull HDAVHolder hdavHolder, int i) {
-                DecimalFormat decimalFormat=new DecimalFormat(".00");
+                DecimalFormat decimalFormat=new DecimalFormat("0.00");
                 hdavHolder.phData.setText(decimalFormat.format(list.get(i).mdata));
                 hdavHolder.measTime.setText(list.get(i).mtime);
             }
